@@ -1,0 +1,47 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+)
+
+type Product struct {
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Price    int    `json:"price"`
+	Photo    string `json:"photo"`
+	Info     string `json:"info"`
+	Category string `json:"category"`
+}
+
+func main() {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASS"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PORT"),
+	)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	if err != nil {
+		panic("DB 연결 실패")
+	}
+
+	r := gin.Default()
+
+	r.GET("/api/products", func(ctx *gin.Context) {
+		var products []Product
+		db.Find(&products)
+
+		ctx.JSON(200, gin.H{
+			"products": products,
+		})
+	})
+
+	r.Run(":8080")
+}
