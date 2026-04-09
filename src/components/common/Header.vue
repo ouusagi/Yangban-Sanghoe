@@ -18,7 +18,7 @@
             <li @click="closeMenu"><router-link to="/product-list">상품목록</router-link></li>
             <li @click="closeMenu"><router-link to="/brandstory">브랜드 이야기</router-link></li>
             <li @click="closeMenu"><router-link to="/recipe">레시피</router-link></li>
-            <li @click="closeMenu"><router-link to="contact">문의하기</router-link></li>
+            <!-- <li @click="closeMenu"><router-link to="contact">문의하기</router-link></li> -->
             </ul>
         </div>
 

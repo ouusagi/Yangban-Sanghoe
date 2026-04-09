@@ -157,7 +157,7 @@
                 <h2>양반상회를 직접 경험해보세요</h2>
                 <p>전통의 바삭함을 지금 만나보세요</p>
             </div>
-            <a href="https://smartstore.naver.com/" target="_blank" class="cta-btn">네이버 스마트스토어 바로가기<span class="arrow">→</span></a>
+            <a href="https://smartstore.naver.com/yangbanstore" target="_blank" class="cta-btn">네이버 스마트스토어 바로가기<span class="arrow">→</span></a>
         </div>
         
     </div>

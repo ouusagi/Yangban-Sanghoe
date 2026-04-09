@@ -11,7 +11,7 @@
             <div class="Footer-btns">
             <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i> Instargram</a>
             <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i> Facebook</a>
-            <a href="https://smartstore.naver.com" target="_blank"><i class="fa-solid fa-store"></i> 스마트스토어</a>
+            <a href="https://smartstore.naver.com/yangbanstore" target="_blank"><i class="fa-solid fa-store"></i> 스마트스토어</a>
             </div>
 
         </div>
