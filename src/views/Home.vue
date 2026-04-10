@@ -225,7 +225,7 @@ export default {
     }
 
     .hero-text p {
-    color: #7A6A58;
+        color: #7A6A58;
     }
 
     .hero-btn {
@@ -914,6 +914,10 @@ export default {
     .about-text p,
     .about-text li {
         font-size: 0.9rem;
+    }
+
+    .about-image{
+        order: 1;
     }
 
     .about-image img {
