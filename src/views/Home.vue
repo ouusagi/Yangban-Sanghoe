@@ -120,7 +120,7 @@
 
             <hr class="cardbox-divider">
 
-            <Cardbox v-for="(item,i) in store.cardData" :key="i" :transfer="item"/>
+            <Cardbox v-for="(item,i) in store.cardData" :key="i" :transfer="item" @click="goDetail(item)"/>
         </div>
 
         <div class="match-container">
@@ -168,6 +168,7 @@
 import { ref } from 'vue';
 import Cardbox from '../components/Cardbox.vue';
 import { useProductStore } from '../stores/product'
+import { useRouter } from 'vue-router';
 
 export default {
 
@@ -177,6 +178,7 @@ export default {
 
     setup(){
         const store = useProductStore()
+        const router = useRouter()
 
         const story = ref([`양반상회는 우리 조상들이 대대로 즐겨 먹던 김부각의 맛을 현대에 되살리고자 시작되었습니다.`,
                      `할머니의 손맛에서 비롯된 작은 레시피 하나가, 오늘날 양반상회의 시작이 되었습니다.`,
@@ -190,8 +192,12 @@ export default {
                        `- 바삭함 속에 담긴 고소한 풍미`,
                        `- 일상에 여유를 더하는 프리미엄 간식`])
 
+        const goDetail = (item)=>{
+            router.push(`/product-detail/${item.id}`)
+        }
+
         return{
-            store,story,feature
+            store,story,feature,goDetail
         }
     }
 }

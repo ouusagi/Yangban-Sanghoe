@@ -16,7 +16,7 @@
         </div>
 
         <div class="cardbox-container">
-            <Cardbox v-for="(items,i) in filteredData" :key="i" :transfer="items"/>
+            <Cardbox v-for="(items,i) in filteredData" :key="i" :transfer="items" @click="goDetail(items)"/>
         </div>
     
     </div>
@@ -28,6 +28,7 @@ import Cardbox from '../components/Cardbox.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useProductStore } from '../stores/product'
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
 
@@ -39,6 +40,7 @@ export default {
         const store = useProductStore()
         const dbData = ref([])
         const selectedCategory = ref('전체')
+        const router = useRouter()
 
         onMounted(async()=>{
             try{
@@ -61,11 +63,16 @@ export default {
             })
         })
 
+        const goDetail = (items)=>{
+            router.push(`/product-detail/${items.id}`)
+        }
+
         return{
             store,
             dbData,
             selectedCategory,
-            filteredData
+            filteredData,
+            goDetail
         }
     }
     
@@ -74,11 +81,9 @@ export default {
 
 
 <style scoped>
-    body{
-        background-color: #FDFAF5;
-    }
 
     .product_list_container{
+        background-color: #FDFAF5;
         display: flex;
         flex-direction: column;
         height: auto;

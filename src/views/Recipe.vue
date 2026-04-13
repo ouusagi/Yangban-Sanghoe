@@ -59,11 +59,8 @@ export default {
 
 <style scoped>
 
-    body{
-        background-color: #FDFAF5;
-    }
-
     .recipe-container{
+        background-color: #FDFAF5;
         display: flex;
         flex-direction: column;
         height: auto;

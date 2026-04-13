@@ -4,6 +4,7 @@ const routes = [
   { path: '/', component: () => import('../views/Home.vue') },
   { path: '/product-list', name:'ProductList', component: ()=> import('../views/ProductList.vue')},
   { path: '/recipe', name:'Recipe', component: ()=> import('../views/Recipe.vue')},
+  { path: '/product-detail/:id', name:'ProductDetail', component: ()=> import('../views/ProductDetail.vue')},
 ]
 
 const router = createRouter({

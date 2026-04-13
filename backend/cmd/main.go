@@ -36,10 +36,20 @@ func main() {
 
 	r := gin.Default()
 
+	// ProductList용
 	r.GET("/api/products", func(ctx *gin.Context) {
 		var products []Product
 		db.Find(&products)
+		ctx.JSON(200, gin.H{
+			"products": products,
+		})
+	})
 
+	// ProductDetail용
+	r.GET("/api/products/:id", func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		var products Product
+		db.First(&products, id)
 		ctx.JSON(200, gin.H{
 			"products": products,
 		})
