@@ -17,6 +17,7 @@ type Product struct {
 	Photo    string `json:"photo"`
 	Info     string `json:"info"`
 	Category string `json:"category"`
+	Infoimg  string `json:"infoimg"`
 }
 
 func main() {

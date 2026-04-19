@@ -5,7 +5,10 @@
 
       <div class="product-img-box">
         <div class="img-wrapper">
-          <img :src="dbData?.photo" alt="양반상회 제품 사진" />
+          <div class="spinner1_box" v-if="!isMainLoaded">
+            <div class="spinner"></div>
+          </div>
+          <img :src="dbData?.photo" alt="양반상회 제품 사진" @load="isMainLoaded = true"/>
           <div class="img-badge">PREMIUM</div>
         </div>
       </div>
@@ -17,7 +20,7 @@
         <div class="divider-line"></div>
 
         <div class="price-section">
-          <span class="price">{{dbData?.price.toLocaleString()}}원</span>
+          <span class="price">{{dbData?.price?.toLocaleString()}}원</span>
         </div>
 
         <p class="shipping-info">
@@ -40,11 +43,17 @@
     <div class="tab-container">
 
     <div class="tab-container-box">
-      <button class="tab-btn active">상세정보</button>
-      <button class="tab-btn">반품/교환</button>
+      <button @click="activeTab = 1" class="tab-btn" :class="{active1 : activeTab === 1}">상세정보</button>
+      <button @click="activeTab = 2" class="tab-btn" :class="{active2 : activeTab === 2}">배송/교환</button>
     </div>
 
-    <img src="../assets/김부각_안주이미지.png" alt="상세정보 이미지">
+    <div class="spinner2_box" v-if="!isDetailLoaded">
+        <div class="spinner"></div>
+    </div>
+    <img v-if="activeTab === 1" :src="dbData?.infoimg" alt="상세정보 이미지" @load="isDetailLoaded = true">
+    <div class="tab2-box">
+      <p v-if="activeTab === 2" class="tab2-info" v-for="(items,i) in notice" :key="i">{{ items }}</p>
+    </div>
     <span>마지막 페이지 입니다</span>
 
     </div>
@@ -60,11 +69,19 @@ import { useRoute } from 'vue-router';
 
 
 export default {
+
   setup() {
 
     const dbData = ref(null)
     const route = useRoute()
     const id = route.params.id
+    const isMainLoaded = ref(false)
+    const isDetailLoaded = ref(false)
+    const activeTab = ref(1)
+    const notice = ['- 기본 배송료는 3,000원 입니다','- 도서, 산간, 오지 일부지역은 배송비가 추가됩니다',
+                    '- 50,000원 이상 구매시 무료배송 됩니다.', '- 배송기간은 제품 주문 후 2-3일 소요예정입니다.',
+                    '- 상품의 가치가 훼손된 경우 반품/교환이 어려울 수 있습니다.','- 임의로 반품하시는 경우 확인이 어려울 수 있습니다.'
+                   ]
 
     onMounted(async ()=>{
         try {
@@ -79,7 +96,7 @@ export default {
     })
     
     return{
-        dbData,
+        dbData,isMainLoaded,isDetailLoaded,activeTab,notice
     }
   },
 };
@@ -88,7 +105,6 @@ export default {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap");
-
 
 * {
   box-sizing: border-box;
@@ -132,6 +148,27 @@ export default {
   display: block;
   border-radius: 2px;
   filter: brightness(0.97);
+}
+
+.spinner1_box,.spinner2_box{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 9999;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 0.25em solid #ccc;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .img-badge {
@@ -274,7 +311,6 @@ export default {
   border: none;
   border-bottom: 2px solid transparent;
   color: #a89070;
-  cursor: pointer;
   transition: all 0.2s ease;
 }
 
@@ -282,10 +318,12 @@ export default {
   color: #2c1f0e;
 }
 
-.tab-btn.active {
+.tab-btn.active1,
+.tab-btn.active2 {
   color: #2c1f0e;
   border-bottom: 2px solid #2c1f0e;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .tab-container span{
@@ -293,6 +331,17 @@ export default {
     padding: 1rem 0;
     background-color: #f5edd8;
     color: #9c7e52;
+}
+
+.tab2-box{
+  padding: 5rem 0;
+}
+
+.tab2-info{
+  text-align: center;
+  padding: 0.5rem 0;
+  letter-spacing: 1.2px;
+  color: #9c7e52;
 }
 
 </style>
