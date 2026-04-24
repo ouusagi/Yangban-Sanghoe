@@ -54,7 +54,7 @@
     <div class="tab2-box">
       <p v-if="activeTab === 2" class="tab2-info" v-for="(items,i) in notice" :key="i">{{ items }}</p>
     </div>
-    <span>마지막 페이지 입니다</span>
+    <span>마지막 페이지 입니다.</span>
 
     </div>
 
@@ -342,6 +342,96 @@ export default {
   padding: 0.5rem 0;
   letter-spacing: 1.2px;
   color: #9c7e52;
+}
+
+/* 태블릿 (1024px 이하) */
+@media (max-width: 1024px) {
+.product-detail-box {
+  gap: 3rem;
+  padding: 3rem 2rem 2rem;
+  align-items: stretch;
+}
+
+.img-wrapper {
+  width: 380px;
+}
+
+.img-wrapper img {
+  height: 100%;
+  min-height: 340px;
+  object-fit: cover;
+}
+
+.product-info-box {
+  height: auto;     
+  align-self: stretch;
+}
+
+.product-name {
+  font-size: 1.6rem;
+}
+
+.price {
+  font-size: 1.3rem;
+}
+
+.btn-buy {
+  position: static;
+  margin-top: auto;
+  width: 100%;
+  display: block;
+}
+}
+
+/* 모바일 (767px 이하) */
+@media (max-width: 767px) {
+.product-detail-box {
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.2rem;
+  gap: 1.5rem;
+}
+
+.img-wrapper {
+  width: 100%;
+}
+
+.img-wrapper img {
+  height: 320px;
+}
+
+.product-info-box {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  padding-bottom: 0rem;
+}
+
+.product-name {
+  font-size: 1.4rem;
+}
+
+.price {
+  font-size: 1.2rem;
+}
+
+.btn-buy {
+  position: static;
+  margin-top: 1.5rem;
+  width: 100%;
+  display: block;
+  padding: 16px 0;
+}
+
+.btn-buy a {
+  display: block;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.tab2-box {
+  padding: 2.5rem 1rem;
+}
 }
 
 </style>
