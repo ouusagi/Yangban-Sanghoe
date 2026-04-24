@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="about-image">
-                    <img src="https://image.8dogam.com/resized/product/asset/v1/upload/5b4b769fd6804207b46d6347bb7117de.png?type=big&res=2x&ext=webp" alt="about-image1">
+                    <img src="https://i.ibb.co/gLr2c1h2/Chat-GPT-Image-2026-4-24-05-27-51.png" alt="about-image1">
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
 
 
             <div class="about-image">
-                <img src="https://img-cf.kurly.com/hdims/resize/%3E720x/quality/90/src/shop/data/goodsview/20211129/gv10000249702_1.jpg" alt="about-image2">
+                <img src="https://i.ibb.co/YTTMXd6C/Chat-GPT-Image-2026-4-24-05-30-06.png" alt="about-image2">
             </div>
 
             <div class="about-text">
@@ -68,7 +68,7 @@
 
             <div class="production-img">
                 <div class="production-card">
-                    <img src="https://static.wtable.co.kr/image/production/service/recipe/2352/f43327ba-e0dc-4827-944b-a5eda1ca409a.jpg?size=800x800" alt="prodiction-kimbugak-img1">
+                    <img src="https://i.ibb.co/hx1J9QDz/Chat-GPT-Image-2026-4-24-05-34-56.png" alt="prodiction-kimbugak-img1">
                     <p class="production-step">STEP 1. 엄선된 재료</p>
                     <div class="production-overlay">
                     <p>STEP 1 <br> 좋은 품질의 김부각 재료를 선별합니다</p>
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="production-card">
-                    <img src="https://static.wtable.co.kr/image/production/service/recipe/2352/ecd7831d-148a-4699-9290-81d6fa94c8a7.jpg?size=800x800" alt="prodiction-kimbugak-img2">
+                    <img src="https://i.ibb.co/qLr3JCfq/Chat-GPT-Image-2026-4-24-05-40-39.png" alt="prodiction-kimbugak-img2">
                     <p class="production-step">STEP 2. 정성스러운 조리</p>
                     <div class="production-overlay">
                     <p>STEP 2 <br> 적절한 온도에서 바삭하게 튀겨냅니다</p>
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="production-card">
-                    <img src="https://lottemartzetta.com/images-v3/932dcbc7-fca8-4d43-bcde-f73d1ce3cc7d/9d71e5b8-8a0c-4106-81a7-26ec8c8ac77e/500x500.jpg" alt="prodiction-kimbugak-img3">
+                    <img src="https://i.ibb.co/NGPVtBW/Chat-GPT-Image-2026-4-24-05-38-54.png" alt="prodiction-kimbugak-img3">
                     <p class="production-step">STEP 3. 깊은 풍미 완성</p>
                     <div class="production-overlay">
                     <p>STEP 3 <br> 달콤하고 고소한 맛을 더해 완성합니다</p>
