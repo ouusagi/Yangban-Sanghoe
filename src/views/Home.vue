@@ -4,7 +4,7 @@
             <div class="hero-text">
                 <h1>수제 김부각의 참맛 !</h1>
                 <p>전통 방식으로 만든 바삭하고 고소한 김부각</p>
-                <router-link to="/brandstory" class="hero-btn">우리의 이야기</router-link>
+                <router-link to="/brand-story" class="hero-btn">우리의 이야기</router-link>
             </div>
             <img src="/src/assets/hero2.png" alt="kimbugak-image">
             <!-- https://img.freepik.com/premium-photo/corn-sticks-concept-tasty-snack-food_185193-180767.jpg -->

@@ -1,36 +1,59 @@
-# Vue 3 + TypeScript + Vite
-
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
 
 ```
 yangban
+├─ Dockerfile
 ├─ README.md
 ├─ backend
+│  ├─ Dockerfile
+│  ├─ cmd
+│  │  └─ main.go
+│  ├─ go.mod
+│  └─ go.sum
+├─ docker-compose.yml
 ├─ index.html
+├─ nginx.conf
 ├─ package-lock.json
 ├─ package.json
 ├─ public
-│  ├─ favicon.svg
-│  ├─ icons.svg
-│  └─ yangban_logo.jpeg
+│  ├─ yangban_logo.jpeg
+│  └─ yangban_logo_wap.png
 ├─ src
 │  ├─ App.vue
 │  ├─ api
 │  ├─ assets
-│  │  ├─ hero.png
-│  │  ├─ vite.svg
-│  │  └─ vue.svg
+│  │  ├─ hero1.png
+│  │  ├─ hero2.png
+│  │  ├─ hero3.png
+│  │  ├─ kimbugak_icon1.png
+│  │  ├─ kimbugak_icon2.png
+│  │  ├─ kimbugak_icon3.png
+│  │  ├─ recipe_file
+│  │  │  ├─ Craberry_riceball.png
+│  │  │  ├─ salad.png
+│  │  │  └─ tteokbokki_bugak.png
+│  │  ├─ 김부각_안주이미지.png
+│  │  ├─ 선물세트.jpg
+│  │  ├─ 어포튀각_간식.jpg
+│  │  └─ 어포튀각_간식1.jpg
 │  ├─ components
-│  │  ├─ HelloWorld.vue
+│  │  ├─ Cardbox.vue
 │  │  └─ common
+│  │     ├─ Footer.vue
+│  │     └─ Header.vue
 │  ├─ main.ts
-│  ├─ pages
 │  ├─ router
+│  │  └─ index.ts
 │  ├─ stores
+│  │  └─ product.js
 │  ├─ style.css
-│  └─ type
+│  ├─ type
+│  ├─ views
+│  │  ├─ BrandStory.vue
+│  │  ├─ Home.vue
+│  │  ├─ ProductDetail.vue
+│  │  ├─ ProductList.vue
+│  │  └─ Recipe.vue
+│  └─ vite-env.d.ts
 ├─ tsconfig.app.json
 ├─ tsconfig.json
 ├─ tsconfig.node.json

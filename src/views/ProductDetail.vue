@@ -33,7 +33,7 @@
         <p class="product-desc">{{dbData?.info}}</p>
 
         <div class="btn-buy">
-          <a href="https://smartstore.naver.com/yangbanstore/products/13351730538">네이버에서 구매하기</a>
+          <a href="https://smartstore.naver.com/yangbanstore/products/13351730538" target="_blank">네이버에서 구매하기</a>
         </div>
 
       </div>
