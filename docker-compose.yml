@@ -1,11 +1,14 @@
 version: '3'
 services:
   frontend:
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
+      
   
   backend:
+    restart: always
     build: ./backend
     ports:
       - "8080:8080"
@@ -16,6 +19,7 @@ services:
         condition: service_healthy
 
   db:
+    restart: always
     image: postgres
     env_file:
       - ./backend/.env
@@ -30,6 +34,7 @@ services:
 
   
   nginx:
+    restart: always
     image: nginx:alpine
     ports:
       - "80:80"

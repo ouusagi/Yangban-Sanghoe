@@ -11,6 +11,7 @@ yangban
 │  └─ go.sum
 ├─ docker-compose.yml
 ├─ index.html
+├─ nginx-frontend.conf
 ├─ nginx.conf
 ├─ package-lock.json
 ├─ package.json
