@@ -7,7 +7,7 @@
 ## 🔗 링크
 
 **배포 주소**: https://yangbansanghoe.com  
-**GitHub**: https://github.com/your-username/Yangban-Sanghoe
+**GitHub**: https://github.com/ouusagi/Yangban-Sanghoe
 
 ---
 

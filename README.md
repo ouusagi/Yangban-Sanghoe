@@ -7,7 +7,7 @@
 ## 🔗 リンク
 
 **デプロイ**: https://yangbansanghoe.com  
-**GitHub**: https://github.com/your-username/Yangban-Sanghoe
+**GitHub**: https://github.com/ouusagi/Yangban-Sanghoe
 
 ---
 
