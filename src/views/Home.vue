@@ -1,16 +1,16 @@
 <template>
     <div class="Home-container">
-        <div class="hero-section">
+        <!-- <div class="hero-section">
             <div class="hero-text">
                 <h1>수제 김부각의 참맛 !</h1>
                 <p>전통 방식으로 만든 바삭하고 고소한 김부각</p>
                 <router-link to="/brand-story" class="hero-btn">우리의 이야기</router-link>
             </div>
             <img src="/src/assets/hero2.png" alt="kimbugak-image">
-            <!-- https://img.freepik.com/premium-photo/corn-sticks-concept-tasty-snack-food_185193-180767.jpg -->
-        </div>
+            https://img.freepik.com/premium-photo/corn-sticks-concept-tasty-snack-food_185193-180767.jpg
+        </div> -->
 
-        <div class="Home-features">
+        <!-- <div class="Home-features">
             <div class="feature-item">
                 <img class="feature-icon" src="/src/assets/kimbugak_icon1.png" alt="kimbugack-icon">
                 <p>전통 수제 방식</p>
@@ -149,15 +149,15 @@
                 </div>
 
             </div>
-        </div>
+        </div> -->
 
         <div class="cta-container">
             <img src="/public/yangban_logo_wap.png" alt="yanban_logo">
             <div class="cta-text">
                 <h2>양반상회를 직접 경험해보세요</h2>
-                <p>전통의 바삭함을 지금 만나보세요</p>
+                <!-- <p>전통의 바삭함을 지금 만나보세요</p> -->
             </div>
-            <a href="https://smartstore.naver.com/yangbanstore" target="_blank" class="cta-btn">네이버 스마트스토어 바로가기<span class="arrow">→</span></a>
+            <!-- <a href="https://smartstore.naver.com/yangbanstore" target="_blank" class="cta-btn">네이버 스마트스토어 바로가기<span class="arrow">→</span></a> -->
         </div>
         
     </div>
@@ -599,7 +599,11 @@ export default {
         margin: 0 auto;
         text-align: center;
         padding: 10rem 0;
-        background-color: #FDFAF5;
+        /* background-color: #FDFAF5; */
+        background-image: url(/src/assets/hero1.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .cta-container img{

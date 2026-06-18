@@ -10,6 +10,7 @@
             <button @click="selectedCategory = '전체'">전체</button>
             <button @click="selectedCategory = '부각'">부각</button>
             <button @click="selectedCategory = '튀각'">튀각</button>
+            <button @click="selectedCategory = '과자류'">과자류</button>
             <hr style="border-color: #C4A882;">
         </div>
 
