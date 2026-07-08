@@ -126,20 +126,6 @@
 DOCKER_BUILDKIT=0 docker compose up --build -d
 ```
 
-### nginx → backend 컨테이너 DNS 해석 실패로 인한 서비스 장애 (2026/07/08)
-- **문제**: 사이트 접속 불가
-- **원인**: 서버(또는 Docker) 재시작 과정에서 Docker 네트워크 정보가 꼬여 nginx가 backend 컨테이너명을 DNS로 해석하지 못함
-- **원인 추측**: nginx는 최초 1회 IP를 받아 메모리에 캐싱해 두는데 서버가 재부팅 되는 과정에서 nginx가 backend보다 먼저 떠서 최초 
-DNS 조회를 하는 시점에 backend가 아직 없어서 애초에 조회 자체가 실패한 채로 캐싱(또는 워커 기동 실패)되고, 이후로 재시도를 안 하니까 계속 못 찾음 (backend는 재시작 시 새로운 IP가 생성될 수 있음)
-즉. db → backend → nginx 순서가 보장되어야함
-- **주의**: `restart: always`는 "죽으면 다시 켠다"만 보장할 뿐 "순서"는 보장하지 않음. 서버/Docker 데몬 재부팅 시엔 compose의 `depends_on`도 순서 보장이 약해질 수 있음
-- **해결**: `docker compose` 재기동을 통한 네트워크 재생성 [`docker compose`로 재기동 시엔 순서가 보장됨](임시 복구)
-- **재발 방지**:
-  1. backend에 healthcheck 추가 + nginx의 `depends_on`에 `condition: service_healthy` 적용예정
-  2. nginx.conf에 `resolver 127.0.0.11` + 변수 방식 `proxy_pass` 적용예정 (순서가 꼬여도 자동 재조회되도록)
-
----
-
 ### EC2 메모리 부족으로 인한 Go 빌드 지연
 
 - **문제**: Go 백엔드 빌드 시 t3.micro 환경에서 빌드가 매우 느리거나 멈추는 현상 발생
@@ -154,6 +140,100 @@ sudo swapon /swapfile
 ```
 
 ---
+
+### nginx → backend 컨테이너 DNS 해석 실패로 인한 서비스 장애 (2026/07/08)
+ 
+- **문제**: 사이트 접속 불가 (약 44시간 지속)
+- **트리거**: AWS 콘솔 확인 결과, 장애 시작 시점에 **EC2 Simplified Auto Recovery (success)** 알람 발생.
+  사용자가 수동으로 재부팅한 것이 아니라, AWS가 호스트 레벨 장애를 감지하여 자동으로 인스턴스를 복구시킨 것이
+  이번 장애의 시작점이었음. 단순 OS 재부팅보다 더 깊은 인프라 레벨의 이벤트로, 그 과정에서
+  Docker 네트워크/DNS 상태가 꼬였을 가능성이 더 높은 상황이었던 것으로 보임.
+---
+ 
+#### 📌 배경 지식: nginx의 DNS 조회 원리 (왜 이런 문제가 생길 수 있는지)
+ 
+nginx는 `proxy_pass http://backend:8080;` 처럼 컨테이너 이름을 **변수 없이 직접** 쓰면,
+**설정을 로드하는 시점(=프로세스가 시작되는 순간)에 딱 한 번** `backend`라는 이름을 IP로 변환(DNS 조회)해서
+메모리에 캐싱해버린다. 이후로는 재조회를 하지 않는다 (resolver를 명시적으로 설정하지 않는 한).
+ 
+이 특성 때문에 이론적으로는 아래 문제가 생길 수 있다:
+ 
+- nginx가 **backend보다 먼저** 뜨면, 최초 DNS 조회 시점에 backend가 아직 없어 조회 자체가 실패
+  → 설정 로드 실패로 마스터 프로세스 종료 (`Exited 255`)
+- backend가 재시작되어 IP가 바뀌어도, nginx는 이미 캐싱된 옛날 IP를 계속 사용 (재조회 안 함)
+즉 이론상으로는 **db → backend → nginx 순서가 보장되어야** 이 문제를 피할 수 있다.
+ 
+> 참고: `docker compose up`으로 직접 올릴 때는 `depends_on` 설정에 따라 이 순서가 보장된다.
+> 반면 서버/Docker 데몬 자체가 재부팅되어 `restart: always` 정책으로 컨테이너들이 각자 복구되는 경우,
+> 이 복구 경로는 compose의 `depends_on` 그래프를 참조하지 않기 때문에 순서 보장이 약해질 수 있다.
+> (`restart: always`는 "죽으면 다시 켠다"만 보장할 뿐 "순서"는 보장하지 않음)
+ 
+---
+ 
+#### 🔍 실제 사고 분석: 그래서 이번엔 뭐가 원인이었나
+ 
+처음엔 위 배경지식대로 **"순서 문제(backend보다 nginx가 먼저 떠서 생긴 최초 조회 실패)"**로 추정했다.
+ 
+하지만 로그를 확인해보니:
+ 
+```
+약 44시간 전 EC2 Simplified Auto Recovery 발생 (호스트 장애 → AWS 자동 복구)
+→ Docker 자동 시작
+→ frontend 시작 성공 / backend 시작 성공 / db 시작 성공
+→ nginx만 시작 실패: host not found in upstream "backend"
+→ restart: always로 재시작 계속 시도했으나 44시간 내내 동일하게 실패 반복
+→ docker compose down && up -d --build 실행 후 정상 복구
+```
+ 
+**backend는 이미 정상 기동(Up) 상태였는데도 nginx는 44시간 내내 이름을 못 찾았다.**
+단순 순서 문제였다면 backend가 뜬 직후 nginx가 재시도할 때 금방 복구됐어야 하는데, 그러지 않았다.
+ 
+→ **결론**: 단순 시작 순서 문제가 아니라, "컨테이너 이름으로 상대를 찾아주는 Docker 내부 DNS 시스템" 자체가
+EC2 Auto Recovery(=인프라 레벨 재시작) 이후 고장 난 채로 굳어버린 것이 실제 원인으로 추정된다.
+ 
+**왜 `docker compose down && up`으로 고쳐졌는가**: `down`은 고장 나 있던 네트워크(DNS 매핑 정보 포함)를
+완전히 삭제하고, `up`은 그 네트워크를 처음부터 새로 만든다. 이 과정에서 컨테이너들의 DNS 정보도 새로 정상 등록되기 때문에
+`docker compose`로 재기동하면 (인프라 재시작 자동 복구와 달리) 네트워크 자체가 깨끗한 상태로 재생성되며 정상화된다.
+ 
+---
+ 
+- **해결 (임시 복구)**: `docker compose down && docker compose up -d --build`
+  → 네트워크를 통째로 삭제 후 재생성하여 정상화
+- **가장 큰 문제**: 장애 발생 시점(EC2 Auto Recovery)과 실제 인지 시점 사이에 **약 44시간의 공백**이 있었음
+- **재발 방지**:
+  1. Uptime Kuma 등으로 사이트 다운 실시간 감지 + 알림 → 재발 시 즉시 대응 (최우선)
+  2. nginx.conf에 `resolver 127.0.0.11` + 변수 방식 `proxy_pass` 적용 예정
+     (DNS 조회 실패해도 nginx 프로세스 자체는 죽지 않고 계속 재조회하도록)
+  3. backend에 healthcheck 추가 + nginx의 `depends_on`에 `condition: service_healthy` 적용 예정
+  4. AWS CloudWatch에서 EC2 Auto Recovery / StatusCheckFailed 알람을 SNS 등으로 연동하여,
+     인프라 레벨 이벤트 발생 시에도 즉시 인지할 수 있도록 조치
+
+<!-- ### nginx → backend 컨테이너 DNS 해석 실패로 인한 서비스 장애 (2026/07/08)1
+- **문제**: 사이트 접속 불가
+- **원인**: 서버(또는 Docker) 재시작 과정에서 Docker 네트워크 정보가 꼬여 nginx가 backend 컨테이너명을 DNS로 해석하지 못함
+- **원인 추측**: nginx는 최초 1회 IP를 받아 메모리에 캐싱해 두는데 서버가 재부팅 되는 과정에서 nginx가 backend보다 먼저 떠서 최초 
+DNS 조회를 하는 시점에 backend가 아직 없어서 애초에 조회 자체가 실패한 채로 캐싱(또는 워커 기동 실패)되고, 이후로 재시도를 안 하니까 계속 못 찾음 (backend는 재시작 시 새로운 IP가 생성될 수 있음)
+즉. db → backend → nginx 순서가 보장되어야함
+- **주의**: `restart: always`는 "죽으면 다시 켠다"만 보장할 뿐 "순서"는 보장하지 않음. 서버/Docker 데몬 재부팅 시엔 compose의 `depends_on`도 순서 보장이 약해질 수 있음
+- **해결**: `docker compose` 재기동을 통한 네트워크 재생성 [`docker compose`로 재기동 시엔 순서가 보장됨](임시 복구)
+- **재발 방지**:
+  1. backend에 healthcheck 추가 + nginx의 `depends_on`에 `condition: service_healthy` 적용예정
+  2. nginx.conf에 `resolver 127.0.0.11` + 변수 방식 `proxy_pass` 적용예정 (순서가 꼬여도 자동 재조회되도록)
+
+
+
+### nginx → backend 컨테이너 DNS 해석 실패로 인한 서비스 장애 (2026/07/08)2
+## 원인
+backend의 시작 순서 문제가 아니라, "컨테이너 이름으로 상대를 찾아주는 Docker 내부 DNS 시스템"이 
+서버 재부팅 이후 고장 난 채로 굳어버린 것이 원인이었다. backend는 정상 기동 상태였음에도 
+nginx는 44시간 내내 이름을 해석하지 못했으며, 이는 `docker compose down/up`으로 
+네트워크를 완전히 재생성한 뒤에야 해결되었다.
+
+## 후속 조치
+장애 발생 시점(재부팅)과 실제 인지 시점 사이에 약 44시간의 공백이 있었다는 점이 가장 큰 문제였다.
+이를 방지하기 위해 Uptime Kuma 등으로 사이트 다운을 실시간 감지하고, 
+동일 상황 재발 시 즉시 알림을 받아 대응할 수 있도록 조치가 필요하다.
+--- -->
 
 ## 📂 디렉토리 구조
 
