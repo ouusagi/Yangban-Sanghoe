@@ -141,6 +141,17 @@ sudo mkswap /swapfile
 sudo swapon /swapfile
 ```
 
+### nginx → backendコンテナのDNS解決失敗によるサービス障害 (2026/07/08)
+- **問題**: サイトにアクセスできない
+- **原因**: サーバー(またはDocker)再起動の過程でDockerネットワーク情報が乱れ、nginxがbackendコンテナ名をDNSで解決できなくなった
+- **原因の推測**: nginxは初回のみIPを取得してメモリにキャッシュするが、サーバー再起動の過程でnginxがbackendより先に起動してしまい、最初のDNS問い合わせを行う時点でbackendがまだ存在せず、そもそも問い合わせ自体が失敗した状態でキャッシュされる(またはワーカーの起動に失敗する)。その後は再試行しないため、ずっと見つけられない状態が続く(backendは再起動時に新しいIPが割り当てられる場合がある)
+つまり、db → backend → nginxの順序が保証される必要がある
+- **注意**: `restart: always`は「死んだら再起動する」ことのみを保証し、「順序」は保証しない。サーバー/Dockerデーモンの再起動時にはcomposeの`depends_on`による順序保証も弱くなる可能性がある
+- **解決**: `docker compose`の再起動によるネットワークの再生成 [docker composeで再起動する場合は順序が保証される](一時的な復旧)
+- **再発防止策**:
+  1. backendにヘルスチェックを追加し、nginxの`depends_on`に`condition: service_healthy`を適用予定
+  2. nginx.confに`resolver 127.0.0.11`と変数方式の`proxy_pass`を適用予定(順序が乱れても自動的に再解決されるように)
+
 ---
 
 ## 📂 ディレクトリ構成

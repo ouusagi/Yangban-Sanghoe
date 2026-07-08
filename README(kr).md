@@ -126,6 +126,18 @@
 DOCKER_BUILDKIT=0 docker compose up --build -d
 ```
 
+### nginx → backend 컨테이너 DNS 해석 실패로 인한 서비스 장애 (2026/07/08)
+- **문제**: 사이트 접속 불가
+- **원인**: 서버(또는 Docker) 재시작 과정에서 Docker 네트워크 정보가 꼬여 nginx가 backend 컨테이너명을 DNS로 해석하지 못함
+- **원인 추측**: nginx는 최초 1회 IP를 받아 메모리에 캐싱해 두는데 서버가 재부팅 되는 과정에서 nginx가 backend보다 먼저 떠서 최초 
+DNS 조회를 하는 시점에 backend가 아직 없어서 애초에 조회 자체가 실패한 채로 캐싱(또는 워커 기동 실패)되고, 이후로 재시도를 안 하니까 계속 못 찾음 (backend는 재시작 시 새로운 IP가 생성될 수 있음)
+즉. db → backend → nginx 순서가 보장되어야함
+- **주의**: `restart: always`는 "죽으면 다시 켠다"만 보장할 뿐 "순서"는 보장하지 않음. 서버/Docker 데몬 재부팅 시엔 compose의 `depends_on`도 순서 보장이 약해질 수 있음
+- **해결**: `docker compose` 재기동을 통한 네트워크 재생성 [`docker compose`로 재기동 시엔 순서가 보장됨](임시 복구)
+- **재발 방지**:
+  1. backend에 healthcheck 추가 + nginx의 `depends_on`에 `condition: service_healthy` 적용예정
+  2. nginx.conf에 `resolver 127.0.0.11` + 변수 방식 `proxy_pass` 적용예정 (순서가 꼬여도 자동 재조회되도록)
+
 ---
 
 ### EC2 메모리 부족으로 인한 Go 빌드 지연
