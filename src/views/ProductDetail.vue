@@ -33,8 +33,10 @@
         <p class="product-desc">{{dbData?.info}}</p>
 
         <div class="btn-buy">
-          <a href="https://smartstore.naver.com/yangbanstore/products/13351730538" target="_blank">네이버에서 구매하기</a>
+          <button @click="showModal = true">주문 문의하기</button>
         </div>
+
+        <Modal v-model="showModal"></Modal>
 
       </div>
 
@@ -66,12 +68,18 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import Modal from '../components/common/Modal.vue';
 
 
 export default {
 
+  components: {
+    Modal
+  },
+
   setup() {
 
+    const showModal = ref(false)
     const dbData = ref(null)
     const route = useRoute()
     const id = route.params.id
@@ -96,7 +104,7 @@ export default {
     })
     
     return{
-        dbData,isMainLoaded,isDetailLoaded,activeTab,notice
+        dbData,isMainLoaded,isDetailLoaded,activeTab,notice,showModal
     }
   },
 };
@@ -279,6 +287,16 @@ export default {
 
 .btn-buy:hover {
   background-color: #02b350;
+}
+
+.btn-buy button{
+  background-color:transparent;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .tab-container {
