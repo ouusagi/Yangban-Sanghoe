@@ -33,10 +33,9 @@
         <p class="product-desc">{{dbData?.info}}</p>
 
         <div class="btn-buy">
-          <button @click="showModal = true">주문 문의하기</button>
+          <a href="https://smartstore.naver.com/yangbansanghoe/products/13766133314">주문하기</a>
         </div>
 
-        <Modal v-model="showModal"></Modal>
 
       </div>
 
@@ -79,7 +78,6 @@ export default {
 
   setup() {
 
-    const showModal = ref(false)
     const dbData = ref(null)
     const route = useRoute()
     const id = route.params.id
@@ -104,7 +102,7 @@ export default {
     })
     
     return{
-        dbData,isMainLoaded,isDetailLoaded,activeTab,notice,showModal
+        dbData,isMainLoaded,isDetailLoaded,activeTab,notice,
     }
   },
 };
@@ -289,14 +287,14 @@ export default {
   background-color: #02b350;
 }
 
-.btn-buy button{
-  background-color:transparent;
-  border: none;
+.btn-buy a{
+  display: block;
+  width: 100%;
   color: #ffffff;
-  text-align: center;
-  cursor: pointer;
+  text-decoration: none;
   font-size: 14px;
   font-weight: 500;
+  letter-spacing: 1px;
 }
 
 .tab-container {
