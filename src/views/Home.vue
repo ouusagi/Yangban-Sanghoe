@@ -158,8 +158,16 @@
                 <!-- <p>전통의 바삭함을 지금 만나보세요</p> -->
             </div>
             <!-- <a href="https://smartstore.naver.com/yangbanstore" target="_blank" class="cta-btn">네이버 스마트스토어 바로가기<span class="arrow">→</span></a> -->
-        </div>
         
+
+        <div class="Menu-container">
+            <li @click="closeMenu"><router-link to="/">홈</router-link></li>
+            <li @click="closeMenu"><router-link to="/product-list">상품목록</router-link></li>
+            <li @click="closeMenu"><router-link to="/brand-story">브랜드 이야기</router-link></li>
+            <li @click="closeMenu"><router-link to="/recipe">레시피</router-link></li>
+        </div>
+
+        </div>
     </div>
 </template>
 
@@ -652,6 +660,10 @@ export default {
         transform: translateX(6px);
     }
 
+    .Menu-container {
+        display: none;
+    }
+
     /* 태블릿 (768px ~ 1024px) */
     @media (max-width: 1024px) {
     
@@ -1051,6 +1063,28 @@ export default {
     .cta-btn {
         font-size: 0.85rem;
         padding: 0.8rem 1.5rem;
+    }
+
+    .Menu-container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 6rem 6rem;
+        width: 100%;
+        gap: 2rem;
+    }
+
+    .Menu-container li {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+        font-family: 'Shilla', sans-serif;
+        font-size: 1.2rem;
+    }
+
+    .header-list li:hover{
+        color: burlywood;
     }
     
     }
